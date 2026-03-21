@@ -1,0 +1,19 @@
+# Maven / Spring Boot
+part 1 backend/target/
+part 1 backend/*.log
+part 1 backend/jdk-17.0.2/
+part 1 backend/apache-maven-3.9.6/
+
+# Node / React
+part 2 frontend/node_modules/
+part 2 frontend/build/
+part 2 frontend/.env.local
+part 2 frontend/.env.production
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
