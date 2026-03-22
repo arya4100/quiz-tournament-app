@@ -85,7 +85,7 @@ const PlayerDashboard = () => {
   return (
     <div className="d-flex flex-column gap-4 font-inter">
       {/* Tab Bar */}
-      <div className="d-flex flex-wrap gap-2">
+      <div className="d-flex flex-wrap gap-2 tab-scroll">
         {TABS.map((tab) => (
           <button
             key={tab}

@@ -287,3 +287,100 @@ h1, h2, h3, h4, h5, h6 {
     min-height: 100vh;
   }
 }
+
+/* ── Mobile Sidebar ───────────────────────────────────────────── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 999;
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 991.98px) {
+  /* Sidebar: hidden by default, slides in from left */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    width: 260px !important;
+  }
+
+  .sidebar.sidebar-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay {
+    display: block;
+  }
+
+  /* Main content takes full width */
+  .main-content {
+    width: 100%;
+    padding: 1.25rem 1rem !important;
+  }
+
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  /* Dashboard header stacks on tiny screens */
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ── Tablet tweaks (md) ───────────────────────────────────────── */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .main-content {
+    padding: 1.5rem 2rem !important;
+  }
+}
+
+/* ── Desktop sidebar always visible ──────────────────────────── */
+@media (min-width: 992px) {
+  .sidebar {
+    transform: none !important;
+  }
+}
+
+/* ── Small phone tweaks ───────────────────────────────────────── */
+@media (max-width: 575.98px) {
+  .hero-text {
+    font-size: 2.5rem;
+  }
+
+  .split-form-panel {
+    padding: 2rem 1.5rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+
+  /* Tab bar scrolls horizontally */
+  .tab-scroll {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .tab-scroll::-webkit-scrollbar {
+    height: 0;
+  }
+
+  /* Quiz session full-width on mobile */
+  .quiz-option-btn {
+    font-size: 0.875rem;
+    padding: 0.65rem 1rem !important;
+  }
+}
