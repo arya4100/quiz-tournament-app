@@ -3,6 +3,9 @@
   command = "npm run build"
   publish = "build"
 
+[build.environment]
+  REACT_APP_API_URL = "https://quiz-tournament-app-production-d43f.up.railway.app"
+
 [[redirects]]
   from   = "/*"
   to     = "/index.html"
