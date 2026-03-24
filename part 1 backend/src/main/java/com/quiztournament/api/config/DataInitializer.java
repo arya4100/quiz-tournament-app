@@ -1,12 +1,17 @@
 package com.quiztournament.api.config;
 
+import com.quiztournament.api.dto.TournamentRequest;
 import com.quiztournament.api.model.Role;
 import com.quiztournament.api.model.User;
+import com.quiztournament.api.repository.TournamentRepository;
 import com.quiztournament.api.repository.UserRepository;
+import com.quiztournament.api.service.TournamentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
  * DataInitializer — runs once on every application startup.
@@ -24,11 +29,17 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private TournamentRepository tournamentRepository;
+
+    @Autowired
+    private TournamentService tournamentService;
+
     @Override
     public void run(String... args) throws Exception {
         seedAdmin();
         seedPlayer();
-        printStartupBanner();
+        seedTournaments();
     }
 
     private void seedAdmin() {
@@ -63,12 +74,37 @@ public class DataInitializer implements CommandLineRunner {
         userRepository.save(player);
     }
 
-    private void printStartupBanner() {
-        System.out.println("\n╔══════════════════════════════════════════════╗");
-        System.out.println("║        Quiz Tournament — Ready to use!       ║");
-        System.out.println("╠══════════════════════════════════════════════╣");
-        System.out.println("║  ADMIN   username: admin    pass: admin123   ║");
-        System.out.println("║  PLAYER  username: player   pass: player123  ║");
-        System.out.println("╚══════════════════════════════════════════════╝\n");
+    private void seedTournaments() {
+        if (tournamentRepository.count() > 0) return;
+
+        try {
+            System.out.println("Seeding default tournaments...");
+            
+            TournamentRequest easy = new TournamentRequest();
+            easy.setName("General Knowledge Blitz");
+            easy.setCategoryId(9);
+            easy.setDifficulty("easy");
+            easy.setCreator("admin");
+            easy.setStartDate(LocalDateTime.now().minusDays(1));
+            easy.setEndDate(LocalDateTime.now().plusDays(7));
+            easy.setPassingThreshold(6.0);
+            tournamentService.createTournament(easy);
+
+            TournamentRequest medium = new TournamentRequest();
+            medium.setName("Science & Nature Challenge");
+            medium.setCategoryId(17);
+            medium.setDifficulty("medium");
+            medium.setCreator("admin");
+            medium.setStartDate(LocalDateTime.now().minusDays(1));
+            medium.setEndDate(LocalDateTime.now().plusDays(7));
+            medium.setPassingThreshold(7.0);
+            tournamentService.createTournament(medium);
+
+            System.out.println("Seeding complete: 2 tournaments added.");
+        } catch (Exception e) {
+            System.err.println("Warning: Could not seed tournaments. " + e.getMessage());
+        }
     }
+
 }
+

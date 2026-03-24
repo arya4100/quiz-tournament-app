@@ -72,7 +72,13 @@ public class TournamentServiceImpl implements TournamentService {
         tournament.setCreator(request.getCreator());
         tournament.setStartDate(request.getStartDate());
         tournament.setEndDate(request.getEndDate());
-        tournament.setPassingThreshold(request.getPassingThreshold());
+        
+        // Handle threshold fallback
+        Double threshold = request.getPassingThreshold();
+        if (threshold == null && request.getPassMarkPercentage() != null) {
+            threshold = request.getPassMarkPercentage().doubleValue();
+        }
+        tournament.setPassingThreshold(threshold != null ? threshold : 7.0);
 
         Tournament savedTournament = tournamentRepository.save(tournament);
 

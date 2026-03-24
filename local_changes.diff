@@ -1,0 +1,84 @@
+diff --git a/part 1 backend/src/main/java/com/quiztournament/api/config/DataInitializer.java b/part 1 backend/src/main/java/com/quiztournament/api/config/DataInitializer.java
+index c8164f7..c3a1bba 100644
+--- a/part 1 backend/src/main/java/com/quiztournament/api/config/DataInitializer.java	
++++ b/part 1 backend/src/main/java/com/quiztournament/api/config/DataInitializer.java	
+@@ -28,7 +28,6 @@ public class DataInitializer implements CommandLineRunner {
+     public void run(String... args) throws Exception {
+         seedAdmin();
+         seedPlayer();
+-        printStartupBanner();
+     }
+ 
+     private void seedAdmin() {
+@@ -63,12 +62,5 @@ public class DataInitializer implements CommandLineRunner {
+         userRepository.save(player);
+     }
+ 
+-    private void printStartupBanner() {
+-        System.out.println("\n╔══════════════════════════════════════════════╗");
+-        System.out.println("║        Quiz Tournament — Ready to use!       ║");
+-        System.out.println("╠══════════════════════════════════════════════╣");
+-        System.out.println("║  ADMIN   username: admin    pass: admin123   ║");
+-        System.out.println("║  PLAYER  username: player   pass: player123  ║");
+-        System.out.println("╚══════════════════════════════════════════════╝\n");
+-    }
+ }
++
+diff --git a/part 1 backend/src/main/java/com/quiztournament/api/dto/TournamentRequest.java b/part 1 backend/src/main/java/com/quiztournament/api/dto/TournamentRequest.java
+index bc0bd60..616d54c 100644
+--- a/part 1 backend/src/main/java/com/quiztournament/api/dto/TournamentRequest.java	
++++ b/part 1 backend/src/main/java/com/quiztournament/api/dto/TournamentRequest.java	
+@@ -1,29 +1,44 @@
+ package com.quiztournament.api.dto;
+ 
++import com.fasterxml.jackson.annotation.JsonFormat;
+ import jakarta.validation.constraints.NotBlank;
+ import jakarta.validation.constraints.NotNull;
+ import lombok.Data;
+ import java.time.LocalDateTime;
+ 
++/**
++ * TournamentRequest — DTO for creating or updating a tournament.
++ *
++ * Dates accept both formats:
++ *   - "2026-03-22"           (date only — time defaults to midnight)
++ *   - "2026-03-22T00:00:00"  (full datetime)
++ */
+ @Data
+ public class TournamentRequest {
++
+     @NotBlank(message = "Tournament name cannot be blank")
+     private String name;
+-    
++
+     private Integer categoryId; // optional OpenTDB category id
+-    
+-    @NotBlank(message = "Creator name cannot be blank")
+-    private String creator;
+-    
++
++    private String creator;     // optional — defaults to logged-in admin
++
+     @NotBlank(message = "Difficulty cannot be blank")
+-    private String difficulty; // easy, medium, hard
+-    
++    private String difficulty;  // easy | medium | hard
++
++    // Accepts "yyyy-MM-dd" or "yyyy-MM-dd'T'HH:mm:ss"
++    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+     @NotNull(message = "Start date cannot be null")
+     private LocalDateTime startDate;
+-    
++
++    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+     @NotNull(message = "End date cannot be null")
+     private LocalDateTime endDate;
+-    
++
+     @NotNull(message = "Passing threshold cannot be null")
+     private Double passingThreshold;
++
++    // Support "category" as well as "categoryId" from frontend
++    private String category;
++    private Integer passMarkPercentage;
+ }
